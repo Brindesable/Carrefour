@@ -10,7 +10,7 @@
 /////////////////////////////////////////////////////////////////  INCLUDE
 //-------------------------------------------------------- Include système
 #include <stdlib.h>
-
+#include <signal.h>
 //------------------------------------------------------ Include personnel
 #include "Clavier.h"
 #include "Menu.h"
@@ -38,6 +38,12 @@ void Clavier ()
 // Algorithme :
 //
 {
+	//debloquage de sigint
+	sigset_t sigint;
+	sigemptyset(&sigint);
+	sigaddset(&sigint, SIGINT);
+	sigprocmask(SIG_UNBLOCK, &sigint, NULL);
+
 	etatGenerateur=false;
 	Menu();
 } //----- fin de Nom

@@ -1,55 +1,40 @@
 /*************************************************************************
-                           Clavier  -  description
+                           Feux  -  description
                              -------------------
-    début                : ${date}
-    copyright            : (C) ${year} par ${user}
+    début                : XXX
+    copyright            : (C) XXX par XXX
+    e-mail               : XXX
 *************************************************************************/
 
-//---------- Interface de la tâche <Clavier> (fichier Clavier.h) -------
-#if ! defined ( CLAVIER_H )
-#define CLAVIER_H
+//---------- Interface de la tâche <XXX> (fichier XXX.h) -------
+#if ! defined ( FEUX_H )
+#define FEUX_H
 
 //------------------------------------------------------------------------
-// Rôle de la tâche <Clavier>
+// Rôle de la tâche <Feux>
 //
 //
 //------------------------------------------------------------------------
 
 /////////////////////////////////////////////////////////////////  INCLUDE
 //--------------------------------------------------- Interfaces utilisées
-#include "Outils.h"
 
 //------------------------------------------------------------- Constantes
+const int dureeInitFeuVertNS = 20;
+const int dureeInitFeuVertEO = 10;
+const int dureeFeuOrange = 3;
+const int dureeFeuRougeSimultane = 2;
 
+enum CouleurFeu{ VERT, ORANGE, ROUGE};
 //------------------------------------------------------------------ Types
-static bool etatGenerateur;
+
 //////////////////////////////////////////////////////////////////  PUBLIC
 //---------------------------------------------------- Fonctions publiques
-void Clavier ();
+void Feux(int semDureeFeuId, int mpDureeFeu, int semCouleurFeuId, int mpCouleurFeu);
 // Mode d'emploi :
 //
 // Contrat :
 //
 
-void Commande (char code);
-// Mode d'emploi :
-//
-// Contrat :
-//
-
-void Commande (TypeVoie entree, TypeVoie sortie);
-// Mode d'emploi :
-//
-// Contrat :
-//
-
-
-void Commande (TypeVoie Voie, unsigned int duree);
-// Mode d'emploi :
-//
-// Contrat :
-//
-
-
-#endif // CLAVIER_H
+#endif // FEUX_H
 
