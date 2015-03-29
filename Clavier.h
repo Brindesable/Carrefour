@@ -1,8 +1,8 @@
 /*************************************************************************
                            Clavier  -  description
                              -------------------
-    début                : ${date}
-    copyright            : (C) ${year} par ${user}
+    début                : 20/03/2015
+    copyright            : (C) 2015 par B3329
 *************************************************************************/
 
 //---------- Interface de la tâche <Clavier> (fichier Clavier.h) -------
@@ -20,12 +20,12 @@
 #include "Outils.h"
 
 //------------------------------------------------------------- Constantes
-
 //------------------------------------------------------------------ Types
 static bool etatGenerateur;
+static unsigned int nbVoiture;
 //////////////////////////////////////////////////////////////////  PUBLIC
 //---------------------------------------------------- Fonctions publiques
-void Clavier ();
+void Clavier (int semDureeFeuId, int mpDureeFeu, int balVoitures);
 // Mode d'emploi :
 //
 // Contrat :
