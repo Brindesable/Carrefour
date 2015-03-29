@@ -72,16 +72,18 @@ int main ( void )
 
 	//recuperation de la cle
 	key_t key = ftok("./Carrefour", 0);
+	key_t key2 = ftok("./makefile", 0);
+
 	//creation des semaphores
-	int semDureeFeuId = semget(key, 1, IPC_CREAT | IPC_EXCL | 0600);
-	int semCouleurFeuId = semget(key, 1, IPC_CREAT | IPC_EXCL | 0600);
+	int semDureeFeuId = semget(key, 1, IPC_CREAT | 0600);
+	int semCouleurFeuId = semget(key, 1, IPC_CREAT | 0600);
 	//initialisation des semaphores
 	semctl(semDureeFeuId, 0, SETVAL, 1);
 	semctl(semCouleurFeuId, 0, SETVAL, 1);
 
 	//creation des memoires partagees
-	int mpDureeFeu = shmget(key, sizeof(int) * 2, IPC_CREAT | IPC_EXCL | 0600);
-	int mpCouleurFeu = shmget(key, sizeof(int) * 2, IPC_CREAT | IPC_EXCL | 0600);
+	int mpDureeFeuId = shmget(key, sizeof(int) * 2, IPC_CREAT | 0600);
+	int mpCouleurFeuId = shmget(key2, sizeof(int) * 2, IPC_CREAT | 0600);
 
 	//creation d'un boite aux lettres
 	int balVoitures = msgget(key, IPC_CREAT | IPC_EXCL | 0600);
@@ -94,7 +96,7 @@ int main ( void )
 	{
 		if((pidF=fork())==0)
 		{
-			Feux(semDureeFeuId, mpDureeFeu, semCouleurFeuId, mpCouleurFeu);
+			Feux(semDureeFeuId, mpDureeFeuId, semCouleurFeuId, mpCouleurFeuId);
 		}
 		else
 		{
@@ -113,8 +115,8 @@ int main ( void )
 			msgctl(balVoitures, IPC_RMID, 0);
 
 			//suppression des memoires partagees
-			shmctl(mpDureeFeu, IPC_RMID, 0);
-			shmctl(mpCouleurFeu, IPC_RMID, 0);
+			shmctl(mpDureeFeuId, IPC_RMID, 0);
+			shmctl(mpCouleurFeuId, IPC_RMID, 0);
 
 			//supression des semaphores
 			semctl(semDureeFeuId, 0, IPC_RMID, 0);

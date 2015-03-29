@@ -20,17 +20,28 @@
 //--------------------------------------------------- Interfaces utilisées
 
 //------------------------------------------------------------- Constantes
-const int dureeInitFeuVertNS = 20;
-const int dureeInitFeuVertEO = 10;
-const int dureeFeuOrange = 3;
-const int dureeFeuRougeSimultane = 2;
+
+//valeurs du sujet
+const int DUREE_INIT_FEU_VERT_NS = 20;
+const int DUREE_INIT_FEU_VERT_EO = 10;
+const int DUREE_FEU_ORANGE = 3;
+const int DUREE_FEU_ROUGE_SIMULTANE = 2;
+
+//rang dans la memoire partagée
+const int MP_NS = 0;
+const int MP_EO = 1;
+
+//val dans la memoire partagee
+const int MP_VAL_VERT = 0;
+const int MP_VAL_ORANGE = 1;
+const int MP_VAL_ROUGE = 2;
 
 enum CouleurFeu{ VERT, ORANGE, ROUGE};
 //------------------------------------------------------------------ Types
 
 //////////////////////////////////////////////////////////////////  PUBLIC
 //---------------------------------------------------- Fonctions publiques
-void Feux(int semDureeFeuId, int mpDureeFeu, int semCouleurFeuId, int mpCouleurFeu);
+void Feux(int semDureeFeuId, int mpDureeFeuId, int semCouleurFeuId, int mpCouleurFeuId);
 // Mode d'emploi :
 //
 // Contrat :
