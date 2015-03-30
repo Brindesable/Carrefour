@@ -8,7 +8,8 @@
 //---------- Réalisation de la tâche <Voie> (fichier Voie.cpp) ---
 
 /////////////////////////////////////////////////////////////////  INCLUDE
-//-------------------------------------------------------- Include système
+//-------------------------------------------------------- Include systèmex
+#include <sys/wait.h>
 #include <stdlib.h>
 #include <signal.h>
 #include <unistd.h>
@@ -17,6 +18,8 @@
 #include <sys/sem.h>
 #include <sys/shm.h>
 #include <sys/msg.h>
+#include <set>
+using namespace std;
 //------------------------------------------------------ Include personnel
 #include "Voie.h"
 #include "Voiture.h"
@@ -33,12 +36,21 @@
 //---------------------------------------------------- Variables statiques
 static TypeVoie voie;
 static int * mpCouleurFeu;
-//static vector<pid_t> voitures;
+static set<pid_t> voitures;
 //------------------------------------------------------ Fonctions privées
 static void finVoie( int noSignal )
 {
 	shmdt(mpCouleurFeu);
+	for (set<int>::iterator it=voitures.begin(); it!=voitures.end(); ++it)
+	{
+		kill(*it, SIGUSR2);
+		waitpid(*it, 0, 0);
+	}
 	exit(0);
+}
+static void finVoiture( pid_t idVoiture )
+{
+	voitures.erase(idVoiture);
 }
 
 static void P(int idSem)
@@ -91,6 +103,13 @@ void ActiverVoie(TypeVoie sense, int balVoituresId, int semCouleurFeuId, int mpC
 	sigemptyset(&finAction.sa_mask);
 	finAction.sa_flags = 0;
 	sigaction(SIGUSR2, &finAction, NULL);
+	//on arme le signal SIGCHLD sur finVoiture
+	struct sigaction arriveVoiture;
+	arriveVoiture.sa_handler = finVoiture;
+	sigemptyset(&arriveVoiture.sa_mask);
+	arriveVoiture.sa_flags = 0;
+	sigaction(SIGCHLD, &finAction, NULL);
+
 
 	//attachement de la memoire du feu
 	mpCouleurFeu = (int*) shmat(mpCouleurFeuId, NULL, SHM_RDONLY);
@@ -98,12 +117,27 @@ void ActiverVoie(TypeVoie sense, int balVoituresId, int semCouleurFeuId, int mpC
 	//Moteur
 	while(1)
 	{
+		//Lire et Dessiner un voiture
 		struct MsgVoiture message;
-		int msg = msgrcv(balVoituresId, &message, TAILLE_MSG_VOITURE, (long)sense, 1);
+		int msg = msgrcv(balVoituresId, &message, TAILLE_MSG_VOITURE, (long) voie,1);
 		struct Voiture voiture;
-		voiture = message.uneVoiture;
-		Afficher(MESSAGE,(long)voiture.entree);
+		voiture=message.uneVoiture;
 		DessinerVoitureFeu(voiture.numero, voiture.entree, voiture.sortie);
+		
+		//Lire EtatFeu et DessinerVoiture
+		int couleurFeu;
+		if(voie==NORD || voie==SUD)
+		{
+			couleurFeu = lireMP(MP_NS, mpCouleurFeu, semCouleurFeuId);
+		}else{
+			couleurFeu = lireMP(MP_EO, mpCouleurFeu, semCouleurFeuId);
+		}
+		
+		if(couleurFeu==MP_VAL_VERT)
+		{
+			voitures.insert(DeplacerVoiture(voiture.numero, voiture.entree, voiture.sortie));
+		}
+		
 	}
 		
 } //----- fin de Nom
