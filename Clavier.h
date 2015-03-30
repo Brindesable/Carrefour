@@ -25,7 +25,7 @@ static bool etatGenerateur;
 static unsigned int nbVoiture;
 //////////////////////////////////////////////////////////////////  PUBLIC
 //---------------------------------------------------- Fonctions publiques
-void Clavier (int semDureeFeuId, int mpDureeFeu, int balVoitures);
+void Clavier (pid_t tacheGenerateur, int semDureeFeuId, int mpDureeFeu, int balVoitures);
 // Mode d'emploi :
 //
 // Contrat :

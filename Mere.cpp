@@ -19,8 +19,8 @@
 #include <sys/msg.h>
 #include <iostream>
 #include <fstream>
-
 //------------------------------------------------------ Include personnel
+#include "Generateur.h"
 #include "Mere.h"
 #include "Outils.h"
 #include "Clavier.h"
@@ -61,6 +61,7 @@ int main ( void )
 //
 {
 	pid_t pidC;
+	pid_t pidG;
 	pid_t pidH;
 	pid_t pidF;
 	pid_t pidN;
@@ -76,28 +77,34 @@ int main ( void )
 	sigaddset(&sigint, SIGINT);
 	sigprocmask(SIG_BLOCK, &sigint, NULL);
 
-	//recuperation de la cle
-	key_t key = ftok("./Carrefour", 0);
-	key_t key2 = ftok("./makefile", 0);
+	//recuperation des cles
+	key_t key1 = ftok("./Carrefour", 0);
+	key_t key2 = ftok("./Carrefour", 1);
+	key_t key3 = ftok("./Carrefour", 2);
+	key_t key4 = ftok("./Carrefour", 3);
+	key_t key5 = ftok("./Carrefour", 4);
+	key_t key6 = ftok("./Carrefour", 5);
+	key_t key7 = ftok("./Carrefour", 6);
 
 	//creation des semaphores
-	int semDureeFeuId = semget(key, 1, IPC_CREAT | 0600);
-	int semCouleurFeuId = semget(key, 1, IPC_CREAT | 0600);
+	int semDureeFeuId = semget(key1, 1, IPC_CREAT | 0600);
+	int semCouleurFeuId = semget(key2, 1, IPC_CREAT | 0600);
 	//initialisation des semaphores
 	semctl(semDureeFeuId, 0, SETVAL, 1);
 	semctl(semCouleurFeuId, 0, SETVAL, 1);
 
 	//creation des memoires partagees
-	int mpDureeFeuId = shmget(key, sizeof(int) * 2, IPC_CREAT | 0600);
-	int mpCouleurFeuId = shmget(key2, sizeof(int) * 2, IPC_CREAT | 0600);
+	int mpDureeFeuId = shmget(key5, sizeof(int) * 2, IPC_CREAT | 0600);
+	int mpCouleurFeuId = shmget(key6, sizeof(int) * 2, IPC_CREAT | 0600);
 
 	//creation d'un boite aux lettres
-	int balVoitures = msgget(key, IPC_CREAT | IPC_EXCL | 0600);
+	int balVoitures = msgget(key7, IPC_CREAT | IPC_EXCL | 0600);
 
-
+	pidG = CreerEtActiverGenerateur(0, balVoitures);
+	
 	if((pidC=fork())==0)
 	{
-		Clavier(semDureeFeuId, mpDureeFeuId, balVoitures);
+		Clavier(pidG, semDureeFeuId, mpDureeFeuId, balVoitures);
 	}
 	else
 	{
@@ -128,13 +135,15 @@ int main ( void )
 						}else
 						{
 							pidH = CreerEtActiverHeure();
-							
 
 							//on attend la terminaison du clavier (par q ou sigint)
 							waitpid(pidC, 0, 0);
 							//on envoie le signal de fin à la tache heure
 							kill(pidH, SIGUSR2);
 							waitpid(pidH, 0, 0);
+							//on envoie le signal de fin à la tache generateur
+							kill(pidG, SIGUSR2);
+							waitpid(pidG, 0, 0);
 							//on envoie le signal de fin à la tache feux
 							kill(pidF, SIGUSR2);
 							waitpid(pidF, 0, 0);

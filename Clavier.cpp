@@ -33,6 +33,7 @@ const int dureeInitFeuVertEO = 10;
 static int balVoitures;
 static int * mpDureeFeu;
 static int semDureeFeuId;
+static pid_t generateur;
 //------------------------------------------------------ Fonctions privées
 static void P(int idSem)
 {
@@ -72,7 +73,7 @@ static int lireMP (int i, int * mp, int semId)
 
 //////////////////////////////////////////////////////////////////  PUBLIC
 //---------------------------------------------------- Fonctions publiques
-void Clavier (int semDureeFeu, int mpDureeFeuId, int balVoituresId)
+void Clavier (pid_t tacheGenerateur, int semDureeFeu, int mpDureeFeuId, int balVoituresId)
 // Algorithme :
 //
 {
@@ -89,6 +90,7 @@ void Clavier (int semDureeFeu, int mpDureeFeuId, int balVoituresId)
 	nbVoiture=1;
 	semDureeFeuId=semDureeFeu;
 	etatGenerateur=false;
+	generateur = tacheGenerateur;
 	
 	//Phase Moteur
 	Menu();
@@ -111,10 +113,12 @@ void Commande (char code)
 		if(etatGenerateur)
 		{
 			etatGenerateur=false;
+			kill(generateur, SIGSTOP);
 			Effacer(ETAT_GENERATEUR);
 			Afficher(ETAT_GENERATEUR,"OFF\0",GRAS);
 		}else{
 			etatGenerateur=true;
+			kill(generateur, SIGCONT);
 			Effacer(ETAT_GENERATEUR);
 			Afficher(ETAT_GENERATEUR,"ON\0",GRAS);
 		}
@@ -136,7 +140,8 @@ void Commande (TypeVoie entree, TypeVoie sortie)
 	}
 	
 	struct MsgVoiture message;
-	message.type=(long) entree;
+	//message.type=(long) entree;
+	message.type=1;
 	message.uneVoiture=voiture;
 	int msg=msgsnd(balVoitures, &message, TAILLE_MSG_VOITURE,0);
 }

@@ -99,9 +99,9 @@ void ActiverVoie(TypeVoie sense, int balVoituresId, int semCouleurFeuId, int mpC
 	while(1)
 	{
 		struct MsgVoiture message;
-		int msg = msgrcv(balVoituresId, &message, TAILLE_MSG_VOITURE, (long) voie,0);
+		int msg = msgrcv(balVoituresId, &message, TAILLE_MSG_VOITURE, (long)sense, 1);
 		struct Voiture voiture;
-		message.uneVoiture=voiture;
+		voiture = message.uneVoiture;
 		Afficher(MESSAGE,(long)voiture.entree);
 		DessinerVoitureFeu(voiture.numero, voiture.entree, voiture.sortie);
 	}
