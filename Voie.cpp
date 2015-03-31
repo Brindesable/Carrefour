@@ -48,6 +48,7 @@ static void finVoie( int noSignal )
 	}
 	exit(0);
 }
+
 static void finVoiture( pid_t idVoiture )
 {
 	voitures.erase(idVoiture);
@@ -110,34 +111,41 @@ void ActiverVoie(TypeVoie sense, int balVoituresId, int semCouleurFeuId, int mpC
 	arriveVoiture.sa_flags = 0;
 	sigaction(SIGCHLD, &finAction, NULL);
 
-
 	//attachement de la memoire du feu
 	mpCouleurFeu = (int*) shmat(mpCouleurFeuId, NULL, SHM_RDONLY);
 	
 	//Moteur
 	while(1)
 	{
+
 		//Lire et Dessiner un voiture
 		struct MsgVoiture message;
-		int msg = msgrcv(balVoituresId, &message, TAILLE_MSG_VOITURE, (long) voie,1);
+		int msg;
+		do
+		{
+			msg = msgrcv(balVoituresId, &message, TAILLE_MSG_VOITURE, (long) voie,1);
+		}while(msg == -1);
+
 		struct Voiture voiture;
 		voiture=message.uneVoiture;
 		DessinerVoitureFeu(voiture.numero, voiture.entree, voiture.sortie);
-		
+
 		//Lire EtatFeu et DessinerVoiture
 		int couleurFeu;
-		if(voie==NORD || voie==SUD)
+		do
 		{
-			couleurFeu = lireMP(MP_NS, mpCouleurFeu, semCouleurFeuId);
-		}else{
-			couleurFeu = lireMP(MP_EO, mpCouleurFeu, semCouleurFeuId);
-		}
-		
-		if(couleurFeu==MP_VAL_VERT)
-		{
-			voitures.insert(DeplacerVoiture(voiture.numero, voiture.entree, voiture.sortie));
-		}
-		
+			if(voie==NORD || voie==SUD)
+			{
+				couleurFeu = lireMP(MP_NS, mpCouleurFeu, semCouleurFeuId);
+			}else{
+				couleurFeu = lireMP(MP_EO, mpCouleurFeu, semCouleurFeuId);
+			}
+			
+			if(couleurFeu==MP_VAL_VERT)
+			{
+				voitures.insert(DeplacerVoiture(voiture.numero, voiture.entree, voiture.sortie));
+			}
+		}while(couleurFeu != MP_VAL_VERT);
 	}
 		
 } //----- fin de Nom

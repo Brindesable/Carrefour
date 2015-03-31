@@ -143,7 +143,7 @@ int main ( void )
 							waitpid(pidH, 0, 0);
 							//on envoie le signal de fin à la tache generateur
 							kill(pidG, SIGUSR2);
-							waitpid(pidG, 0, 0);
+							//waitpid(pidG, 0, 0);
 							//on envoie le signal de fin à la tache feux
 							kill(pidF, SIGUSR2);
 							waitpid(pidF, 0, 0);
