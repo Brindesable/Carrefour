@@ -97,11 +97,7 @@ void Feux(int semDureeFeuId, int mpDureeFeuId, int semCouleurFeuId, int mpCouleu
 
 	//attachement de la memoire du feu
 	mpCouleurFeu = (int*) shmat(mpCouleurFeuId, NULL, 0);
-	mpDureeFeu = (int*) shmat(mpDureeFeuId, NULL, 0); 
-	//mpDureeFeu = (int*) shmat(mpDureeFeuId, NULL, SHM_RDONLY); 
-	//mpDureeFeu = new int[2];
-	ecrireMP(MP_NS, 20, mpDureeFeu, semDureeFeuId);
-	ecrireMP(MP_EO, 10, mpDureeFeu, semDureeFeuId);
+	mpDureeFeu = (int*) shmat(mpDureeFeuId, NULL, SHM_RDONLY);
 
 	int dureeRestanteFeuNS = DUREE_INIT_FEU_VERT_NS;
 	//le temps que le feu NS passe de vert a rouge + 2s
