@@ -132,6 +132,11 @@ void Commande (TypeVoie entree, TypeVoie sortie)
 	voiture.sortie=sortie;
 	voiture.numero=nbVoiture;
 	
+	Afficher(NUMERO,nbVoiture);
+	Afficher(ENTREE,entree);
+	Afficher(SORTIE,sortie);
+	OperationVoie(PLUS,entree);
+	
 	if(nbVoiture<200)
 	{
 		nbVoiture++;
@@ -140,8 +145,7 @@ void Commande (TypeVoie entree, TypeVoie sortie)
 	}
 	
 	struct MsgVoiture message;
-	//message.type=(long) entree;
-	message.type=1;
+	message.type=(long) entree;
 	message.uneVoiture=voiture;
 	int msg=msgsnd(balVoitures, &message, TAILLE_MSG_VOITURE,0);
 }
