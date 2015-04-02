@@ -78,8 +78,8 @@ void Feux(int semDureeFeuId, int mpDureeFeuId, int semCouleurFeuId, int mpCouleu
 
 	while(1)
 	{
-		int dureeFeuEO = lireMP(MP_NS, mpDureeFeu, semDureeFeuId);
-		int dureeFeuNS = lireMP(MP_EO, mpDureeFeu, semDureeFeuId);
+		int dureeFeuNS = lireMP(MP_NS, mpDureeFeu, semDureeFeuId);
+		int dureeFeuEO = lireMP(MP_EO, mpDureeFeu, semDureeFeuId);
 		if(dureeRestanteFeuNS == 0)
 		{
 			switch(couleurFeuNS)

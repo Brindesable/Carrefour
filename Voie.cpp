@@ -19,7 +19,6 @@
 #include <sys/shm.h>
 #include <sys/msg.h>
 #include <set>
-using namespace std;
 //------------------------------------------------------ Include personnel
 #include "Voie.h"
 #include "Voiture.h"
@@ -73,8 +72,8 @@ void ActiverVoie(TypeVoie sense, int balVoituresId, int semCouleurFeuId, int mpC
 	struct sigaction arriveVoiture;
 	arriveVoiture.sa_handler = finVoiture;
 	sigemptyset(&arriveVoiture.sa_mask);
-	arriveVoiture.sa_flags = 0;
-	sigaction(SIGCHLD, &arriveVoiture, NULL); //!
+	arriveVoiture.sa_flags = 0; //!
+	sigaction(SIGCHLD, &arriveVoiture, NULL);
 
 	//attachement de la memoire du feu
 	mpCouleurFeu = (int*) shmat(mpCouleurFeuId, NULL, SHM_RDONLY);
@@ -93,6 +92,7 @@ void ActiverVoie(TypeVoie sense, int balVoituresId, int semCouleurFeuId, int mpC
 		struct Voiture voiture;
 		voiture=message.uneVoiture;
 		DessinerVoitureFeu(voiture.numero, voiture.entree, voiture.sortie);
+		OperationVoie(MOINS, voie); // !
 
 		int couleurFeu;
 		do
@@ -104,7 +104,7 @@ void ActiverVoie(TypeVoie sense, int balVoituresId, int semCouleurFeuId, int mpC
 				couleurFeu = lireMP(MP_EO, mpCouleurFeu, semCouleurFeuId);
 			}
 			
-			sleep(1);
+			sleep(1);//!
 		}while(couleurFeu != MP_VAL_VERT); 
 		
 		voitures.insert(DeplacerVoiture(voiture.numero, voiture.entree, voiture.sortie)); //!

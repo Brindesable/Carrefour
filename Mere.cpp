@@ -127,6 +127,12 @@ int main ( void )
 	int mpDureeFeuId = shmget(key5, sizeof(int) * 2, IPC_CREAT | 0600);
 	int mpCouleurFeuId = shmget(key6, sizeof(int) * 2, IPC_CREAT | 0600);
 
+	//on initialise les durees du feu
+	int * mpDureeFeu = (int*) shmat(mpDureeFeuId, NULL, 0);
+	ecrireMP(MP_NS, DUREE_INIT_FEU_VERT_NS, mpDureeFeu, semDureeFeuId);
+	ecrireMP(MP_EO, DUREE_INIT_FEU_VERT_EO, mpDureeFeu, semDureeFeuId);
+	shmdt(mpDureeFeu);
+
 	//creation d'un boite aux lettres
 	int balVoitures = msgget(key7, IPC_CREAT | IPC_EXCL | 0600);
 
