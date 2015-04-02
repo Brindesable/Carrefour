@@ -43,11 +43,6 @@ void Clavier (pid_t tacheGenerateur, int semDureeFeu, int mpDureeFeuId, int balV
 //
 {
 	//Phase Initialisation
-	//debloquage de sigint
-	sigset_t sigint;
-	sigemptyset(&sigint);
-	sigaddset(&sigint, SIGINT);
-	sigprocmask(SIG_UNBLOCK, &sigint, NULL);
 	//Attachement en Ecriture a la Memoire Partage DureeFeu
 	mpDureeFeu = (int*) shmat(mpDureeFeuId, NULL, 0);
 	//Initialization variables

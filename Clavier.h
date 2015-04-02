@@ -27,26 +27,28 @@ static unsigned int nbVoiture;
 //---------------------------------------------------- Fonctions publiques
 void Clavier (pid_t tacheGenerateur, int semDureeFeuId, int mpDureeFeu, int balVoitures);
 // Mode d'emploi :
-//
+//		- Gère les entrées du clavier. Peu mettre à jour la mémoire partagée mpDureeFeu protégée par
+// 			le sémaphore repéré par semDureeFeuId. Peu activer/desactiver la tache tacheGenerateur.
+//			Peut ajouter des voitures dans la boite aux lettres balVoitures.
 // Contrat :
-//
+// 
 
 void Commande (char code);
 // Mode d'emploi :
-//
+//		- Surcharge de la lib tp
 // Contrat :
 //
 
 void Commande (TypeVoie entree, TypeVoie sortie);
 // Mode d'emploi :
-//
+//		- Surcharge de la lib tp
 // Contrat :
 //
 
 
 void Commande (TypeVoie Voie, unsigned int duree);
 // Mode d'emploi :
-//
+//		- Surcharge de la lib tp
 // Contrat :
 //
 
