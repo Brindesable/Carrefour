@@ -35,7 +35,7 @@ static int * mpDureeFeu;
 //------------------------------------------------------ Fonctions privées
 static void finFeux( int noSignal )
 // Mode d'emploi :
-//
+//		- Termine la tache feux
 // Contrat :
 //
 // Algorithme :

@@ -36,16 +36,6 @@
 //---------------------------------------------------- Variables statiques
 
 //------------------------------------------------------ Fonctions privées
-//static type nom ( liste de paramètres )
-// Mode d'emploi :
-//
-// Contrat :
-//
-// Algorithme :
-//
-//{
-//} //----- fin de nom
-
 
 
 //////////////////////////////////////////////////////////////////  PUBLIC
@@ -56,7 +46,6 @@ void P(int idSem)
 	struct sembuf buffer;
 	buffer.sem_num = 0;
 	buffer.sem_op = -1;
-	//buffer.sem_flg = IPC_UNDO;
 	semop(idSem, &buffer, 1);
 }
 
@@ -65,7 +54,6 @@ void V(int idSem)
 	struct sembuf buffer;
 	buffer.sem_num = 0;
 	buffer.sem_op = 1;
-	//buffer.sem_flg = IPC_UNDO;
 	semop(idSem, &buffer, 1);
 }
 
@@ -101,11 +89,11 @@ int main ( void )
 	
 	InitialiserApplication(XTERM);
 
-	//bloquage de sigint
-	sigset_t sigint;
-	sigemptyset(&sigint);
-	sigaddset(&sigint, SIGINT);
-	sigprocmask(SIG_BLOCK, &sigint, NULL);
+	/*//bloquage de sigusr2
+	sigset_t sigusr2;
+	sigemptyset(&sigusr2);
+	sigaddset(&sigusr2, SIGUSR2);
+	sigprocmask(SIG_BLOCK, &sigusr2, NULL);*/
 
 	//recuperation des cles
 	key_t key1 = ftok("./Carrefour", 0);

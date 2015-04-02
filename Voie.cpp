@@ -38,6 +38,8 @@ static int * mpCouleurFeu;
 static set<pid_t> voitures;
 //------------------------------------------------------ Fonctions privées
 static void finVoie( int noSignal )
+// 	Mode d'emploi :
+//			- A utiliser lors de la terminaison de la tache	
 {
 	shmdt(mpCouleurFeu);
 	for (set<int>::iterator it=voitures.begin(); it!=voitures.end(); ++it)
@@ -48,7 +50,9 @@ static void finVoie( int noSignal )
 	exit(0);
 }
 
-static void finVoiture( int noSignal ) //!
+static void finVoiture( int noSignal )
+// 	Mode d'emploi :
+// 			- A utiliser lorsqu'une voiture quitte le Carrefour
 {
 	pid_t idVoiture = wait(NULL);
 	voitures.erase(idVoiture);

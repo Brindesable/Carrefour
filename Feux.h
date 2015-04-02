@@ -43,7 +43,8 @@ enum CouleurFeu{ VERT, ORANGE, ROUGE};
 //---------------------------------------------------- Fonctions publiques
 void Feux(int semDureeFeuId, int mpDureeFeuId, int semCouleurFeuId, int mpCouleurFeuId);
 // Mode d'emploi :
-//
+//		- Lit dans la memoire partagée mpDureeFeuId protégée par le sémaphore semDureeFeuId les durées des feux verts.
+// 			Met à jour la couleur des feux dans la memoire partagee mpCouleurFeuId protegee par le semaphore semCouleurFeuId
 // Contrat :
 //
 

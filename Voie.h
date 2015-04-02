@@ -26,7 +26,9 @@
 //---------------------------------------------------- Fonctions publiques
 void ActiverVoie(TypeVoie sense, int balVoituresId, int semCouleurFeuId, int mpCouleurFeuId);
 // Mode d'emploi :
-//
+//		- La voie est caracterisee par TypeVoie (il y en 4 en tout). Elle lit dans la boite aux lettre balVoituresId,
+//			et consulte la couleur des feu indiqué par mpCouleurFeuId avant de lancer une voiture. Cette mp est protégée
+//			par le sempahore semCouleurFeuId
 // Contrat :
 //
 
