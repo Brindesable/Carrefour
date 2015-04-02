@@ -46,14 +46,44 @@
 //{
 //} //----- fin de nom
 
+
+
 //////////////////////////////////////////////////////////////////  PUBLIC
 //---------------------------------------------------- Fonctions publiques
-void log(string log)
+
+void P(int idSem)
 {
-	ofstream myfile;
-  	myfile.open ("log", ios::app);
-  	myfile << log << endl;
-  	myfile.close();
+	struct sembuf buffer;
+	buffer.sem_num = 0;
+	buffer.sem_op = -1;
+	//buffer.sem_flg = IPC_UNDO;
+	semop(idSem, &buffer, 1);
+}
+
+void V(int idSem)
+{
+	struct sembuf buffer;
+	buffer.sem_num = 0;
+	buffer.sem_op = 1;
+	//buffer.sem_flg = IPC_UNDO;
+	semop(idSem, &buffer, 1);
+}
+
+void ecrireMP (int i, int val, int * mp, int semId)
+{
+	P(semId);
+	mp[i] = val;
+	stringstream ss;
+	ss << val;
+	V(semId);
+}
+
+int lireMP (int i, int * mp, int semId)
+{
+	P(semId);
+	int val = mp[i];
+	V(semId);
+	return val;
 }
 
 int main ( void )
@@ -142,8 +172,9 @@ int main ( void )
 							kill(pidH, SIGUSR2);
 							waitpid(pidH, 0, 0);
 							//on envoie le signal de fin à la tache generateur
+							kill(pidG, SIGCONT);
 							kill(pidG, SIGUSR2);
-							//waitpid(pidG, 0, 0);
+							waitpid(pidG, 0, 0);
 							//on envoie le signal de fin à la tache feux
 							kill(pidF, SIGUSR2);
 							waitpid(pidF, 0, 0);

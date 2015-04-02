@@ -46,42 +46,6 @@ static void finFeux( int noSignal )
 	exit(0);
 } //----- fin de fin
 
-static void P(int idSem)
-{
-	struct sembuf buffer;
-	buffer.sem_num = 0;
-	buffer.sem_op = -1;
-	//buffer.sem_flg = IPC_UNDO;
-	semop(idSem, &buffer, 1);
-}
-
-static void V(int idSem)
-{
-	struct sembuf buffer;
-	buffer.sem_num = 0;
-	buffer.sem_op = 1;
-	//buffer.sem_flg = IPC_UNDO;
-	semop(idSem, &buffer, 1);
-}
-
-static void ecrireMP (int i, int val, int * mp, int semId)
-{
-	P(semId);
-	mp[i] = val;
-	stringstream ss;
-	ss << val;
-	log(ss.str());
-	V(semId);
-}
-
-static int lireMP (int i, int * mp, int semId)
-{
-	P(semId);
-	int val = mp[i];
-	V(semId);
-	return val;
-}
-
 //////////////////////////////////////////////////////////////////  PUBLIC
 //---------------------------------------------------- Fonctions publiques
 void Feux(int semDureeFeuId, int mpDureeFeuId, int semCouleurFeuId, int mpCouleurFeuId)
